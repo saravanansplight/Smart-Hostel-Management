@@ -1,1 +1,95 @@
-# Smart-Hostel-Management
+# SmartStay — Smart Hostel Management System
+
+A professional full-stack mini project with secure, role-based student and warden portals. It is responsive across desktop, laptop, tablet and mobile.
+
+## Demo credentials
+
+| Portal | Email | Password |
+|---|---|---|
+| **Warden** | `warden@smartstay.edu` | `Warden@123` |
+| **Student** | `arun@smartstay.edu` | `Student@123` |
+
+> Additional seeded students use `Student@123` (for example `priya@smartstay.edu`).
+
+## Features
+
+### Warden portal
+- Live overview with occupancy, students, collections and request metrics
+- Room CRUD, occupancy details, allocation and deallocation
+- Student registration, editing, activation/deactivation and guardian records
+- Approve/reject leave with warden notes
+- Assign fees and mark payment status
+- Complaint workflow: Open → In Progress → Resolved
+- Visitor approval, check-in and check-out workflow
+- Warden-only styled Excel exports for all modules
+- Account profile and password management
+
+### Student portal
+- Personal dashboard with room and account summary
+- Room and roommate details
+- Submit/cancel leave requests and track approvals
+- Review fees and make a simulated payment (transaction receipt ID is generated)
+- Raise and track maintenance complaints
+- Request visitor passes and track entry status
+- Edit profile, guardian details and password
+
+### Security and engineering
+- BCrypt password hashing (12 rounds)
+- JWT stored in an `HttpOnly`, `SameSite=Strict` cookie
+- Backend role guards for every protected operation
+- Login rate limiting, Helmet security headers and payload limits
+- MongoDB Atlas with Mongoose schemas and automatic first-run seed
+- Auto-seeded demo datastore fallback when Atlas is not configured
+- Local compiled Tailwind CSS; no CDN required
+
+## Quick start
+
+```bash
+npm install
+npm run css:build
+npm start
+```
+
+Open `http://localhost:3000`.
+
+## Connect MongoDB Atlas
+
+1. Create a free Atlas cluster and database user.
+2. Allow your current IP under **Network Access**.
+3. Copy `.env.example` to `.env`.
+4. Set `MONGODB_URI` to your Atlas connection string.
+5. Set a long random `JWT_SECRET`.
+6. Restart with `npm start`.
+
+If the selected database is empty, SmartStay seeds the demo accounts and sample data automatically. Without `MONGODB_URI`, the app remains fully usable with the in-memory demo store (data resets when the server restarts).
+
+## Project structure
+
+```text
+smart-hostel/
+├── models/index.js          # Mongoose schemas
+├── public/
+│   ├── css/                 # Compiled Tailwind + UI styles
+│   ├── js/app.js            # Responsive SPA and workflows
+│   └── index.html
+├── src/tailwind.css         # Tailwind component source
+├── .env.example
+├── package.json
+├── server.js                # Express API, auth, reports and fallback store
+└── tailwind.config.js
+```
+
+## API overview
+
+- `/api/auth/*` — login, session, logout
+- `/api/dashboard` — role-specific overview
+- `/api/rooms` — inventory and allocation
+- `/api/students` — student records (warden only)
+- `/api/leaves`, `/api/fees`, `/api/complaints`, `/api/visitors` — operational modules
+- `/api/profile/*` — account updates
+- `/api/reports/:type` — Excel exports (warden only)
+
+## Notes
+
+- The student payment action is a safe **project simulation**; it records a transaction ID but does not contact a real payment gateway.
+- For production, use HTTPS, rotate the JWT secret, tighten the Atlas IP allowlist, add audit logging, email/SMS services and a real payment provider.

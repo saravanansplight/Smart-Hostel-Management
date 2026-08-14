@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#071528">
+  <meta name="description" content="SmartStay — secure, responsive smart hostel administration and student portal.">
+  <title>SmartStay | Hostel Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%2210%22 fill=%22%230b7c6c%22/><path d=%22M11 29V14l9-5 9 5v15M15 29v-7h10v7M16 16h2m4 0h2%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>">
+  <link rel="stylesheet" href="/css/tailwind.css">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+  <div id="loadingScreen" class="fixed inset-0 z-[100] flex items-center justify-center bg-navy-950 text-white">
+    <div class="text-center">
+      <div class="logo-mark mx-auto mb-4"><span class="logo-building"></span></div>
+      <p class="text-sm font-semibold tracking-widest text-slate-400">SMARTSTAY</p>
+      <div class="mx-auto mt-5 h-1 w-24 overflow-hidden rounded-full bg-white/10"><div class="loading-bar h-full bg-brand-500"></div></div>
+    </div>
+  </div>
+
+  <section id="loginScreen" class="hidden min-h-screen bg-slate-50">
+    <div class="login-layout">
+      <div class="login-visual">
+        <div class="login-visual-inner">
+          <div class="logo-mark green-glow"><span class="logo-building"></span></div>
+          <h2 class="mt-8 text-sm font-bold uppercase tracking-[.18em] text-white">SMART CAMPUS</h2>
+          <h1 class="mt-5 max-w-[650px] text-[4.3rem] font-black leading-[0.9] tracking-[-.07em] text-white xl:text-[5rem]">Smarter hostel management for a better campus experience.</h1>
+          <h2 class="mt-6 max-w-[560px] text-[1.55rem] leading-[1.55] text-white">Manage rooms, students, fees, leave, complaints and visitors in one secure portal.</h2>
+        </div>
+      </div>
+
+      <div class="login-panel-wrap">
+        <div class="login-card">
+          <div class="login-brand">
+            <div class="logo-mark dark"><span class="logo-building"></span></div>
+            <div>
+              <p class="text-2xl font-black tracking-tight text-navy-950">SmartStay</p>
+              <small class="text-[11px] font-bold uppercase tracking-[.18em] text-slate-400">Secure campus access</small>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <p class="mb-2 text-xs font-extrabold uppercase tracking-[.2em] text-brand-700">Welcome back</p>
+            <h2 class="text-3xl font-black tracking-[-.035em] text-navy-950">Sign in to your portal</h2>
+            <p class="mt-2 text-sm leading-6 text-slate-500">Choose your role and enter your registered credentials.</p>
+          </div>
+
+          <div id="loginDbStatus" class="mb-5 hidden items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-50 px-3 py-2 text-[11px] font-bold text-amber-700">
+            <span class="h-2 w-2 shrink-0 rounded-full bg-amber-500"></span>
+            <span>MongoDB disconnected — demo mode active</span>
+          </div>
+
+          <div class="mb-6 grid grid-cols-2 rounded-2xl bg-slate-100 p-1.5" id="roleSwitcher">
+            <button type="button" data-login-role="warden" class="role-choice active"><span data-icon="shield"></span><span><b>Warden</b><small>Admin portal</small></span></button>
+            <button type="button" data-login-role="student" class="role-choice"><span data-icon="user"></span><span><b>Student</b><small>Student portal</small></span></button>
+          </div>
+
+          <form id="loginForm" class="space-y-4">
+            <input type="hidden" id="loginRole" value="warden">
+            <div><label class="label" for="loginEmail">Email address</label><div class="input-wrap"><span data-icon="mail"></span><input class="input pl-11" id="loginEmail" type="email" autocomplete="username" placeholder="name@smartstay.edu" required></div></div>
+            <div><div class="mb-1.5 flex items-center justify-between"><label class="label mb-0" for="loginPassword">Password</label><button type="button" class="text-xs font-bold text-brand-700 hover:text-brand-600" data-action="forgot-password">Forgot password?</button></div><div class="input-wrap"><span data-icon="lock"></span><input class="input pl-11 pr-11" id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required><button type="button" data-action="toggle-password" class="password-toggle" aria-label="Show password"><span data-icon="eye"></span></button></div></div>
+            <label class="flex cursor-pointer items-center gap-2.5 text-sm text-slate-600"><input id="rememberEmail" type="checkbox" class="h-4 w-4 rounded border-slate-300 accent-[#0b7c6c]"> Remember my email</label>
+            <button id="loginButton" class="btn-brand h-12 w-full text-[15px]" type="submit"><span>Sign in securely</span><span data-icon="arrow-right"></span></button>
+          </form>
+
+          <div class="my-7 flex items-center gap-3"><div class="h-px flex-1 bg-slate-200"></div><span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Quick demo access</span><div class="h-px flex-1 bg-slate-200"></div></div>
+          <button type="button" id="demoCredential" data-action="use-demo" class="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition hover:border-brand-500 hover:shadow-card">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-700"><span data-icon="key"></span></div>
+            <div class="min-w-0 flex-1"><p class="text-xs font-extrabold text-navy-900" id="demoTitle">Warden demo</p><p class="truncate text-xs text-slate-500" id="demoEmail">warden@smartstay.edu · Warden@123</p></div>
+            <span class="text-slate-400" data-icon="chevron-right"></span>
+          </button>
+          <p class="mt-8 text-center text-xs leading-5 text-slate-400">Protected by encrypted authentication<br>© 2026 SmartStay Campus Services</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="appScreen" class="hidden min-h-screen bg-slate-50">
+    <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-navy-950/50 backdrop-blur-sm lg:hidden" data-action="close-sidebar"></div>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 flex w-[272px] -translate-x-full flex-col bg-navy-950 px-4 py-5 text-white transition-transform duration-300 lg:translate-x-0">
+      <div class="flex items-center justify-between px-2 pb-7">
+        <div class="flex items-center gap-3"><div class="logo-mark"><span class="logo-building"></span></div><div><p class="text-lg font-black tracking-tight">SmartStay</p><p id="portalLabel" class="text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">Management portal</p></div></div>
+        <button class="rounded-lg p-2 text-slate-400 hover:bg-white/10 hover:text-white lg:hidden" data-action="close-sidebar"><span data-icon="x"></span></button>
+      </div>
+      <p class="px-3 pb-2 text-[10px] font-extrabold uppercase tracking-[.18em] text-slate-500">Workspace</p>
+      <nav id="mainNav" class="space-y-1"></nav>
+      <div class="mt-auto pt-4">
+        <div class="mb-3 rounded-2xl border border-white/10 bg-white/[.055] p-3.5">
+          <div class="flex items-center gap-3"><div id="sideAvatar" class="avatar avatar-sm"></div><div class="min-w-0"><p id="sideName" class="truncate text-sm font-bold text-white"></p><p id="sideMeta" class="truncate text-[11px] text-slate-400"></p></div></div>
+        </div>
+        <div id="sidebarDbStatus" class="mb-3 flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] font-bold text-amber-200">
+          <span class="h-2 w-2 shrink-0 rounded-full bg-amber-400"></span>
+          <span>Checking MongoDB…</span>
+        </div>
+        <button class="nav-link text-slate-400" data-action="logout"><span data-icon="logout"></span><span>Sign out</span></button>
+      </div>
+    </aside>
+
+    <main class="min-h-screen lg:ml-[272px]">
+      <header class="sticky top-0 z-30 flex h-[72px] items-center justify-between border-b border-slate-200/80 bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
+        <div class="flex min-w-0 items-center gap-3">
+          <button class="rounded-xl border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 lg:hidden" data-action="open-sidebar"><span data-icon="menu"></span></button>
+          <div class="min-w-0"><p id="breadcrumb" class="hidden text-[10px] font-bold uppercase tracking-wider text-slate-400 sm:block">SmartStay / Portal</p><h1 id="pageTitle" class="truncate text-lg font-black tracking-tight text-navy-950 sm:text-xl">Overview</h1></div>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div id="dbStatus" class="hidden items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-[11px] font-bold text-emerald-700 md:flex"><span class="h-2 w-2 rounded-full bg-emerald-500"></span><span>System online</span></div>
+          <button class="relative rounded-xl border border-slate-200 p-2.5 text-slate-500 transition hover:bg-slate-50" data-action="notifications"><span data-icon="bell"></span><span id="notificationDot" class="absolute right-2 top-2 h-2 w-2 rounded-full border-2 border-white bg-amber-500"></span></button>
+          <button class="flex items-center gap-2 rounded-xl p-1.5 transition hover:bg-slate-100" data-action="profile"><div id="topAvatar" class="avatar avatar-sm"></div><span class="hidden text-left md:block"><b id="topName" class="block max-w-32 truncate text-xs text-navy-900"></b><small id="topRole" class="block text-[10px] capitalize text-slate-400"></small></span><span class="hidden text-slate-400 md:block" data-icon="chevron-down"></span></button>
+        </div>
+      </header>
+      <div id="appContent" class="mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8"></div>
+    </main>
+  </section>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot" class="pointer-events-none fixed bottom-5 right-5 z-[200] flex w-[calc(100%-2.5rem)] max-w-sm flex-col gap-3"></div>
+  <div id="confirmRoot"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
